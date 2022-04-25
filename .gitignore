@@ -11,4 +11,5 @@ Desktop.ini
 dist
 build
 
+# Do not ignore
 !.gitkeep
