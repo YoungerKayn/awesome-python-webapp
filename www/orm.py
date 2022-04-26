@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# 编写ORM
+
 import aiomysql,asyncio,logging
 
 # 输出日志
@@ -234,9 +236,11 @@ class Model(dict, metaclass=ModelMetaclass):
 # Field 元类 和各种 Field 子类：
 
 class Field(object):
-    def __init__(self, name, column_type):
+    def __init__(self, name, column_type, primary_key, default):
         self.name = name
         self.column_type = column_type
+        self.primary_key = primary_key
+        self.default = default
     def __str__(self):
         return '<%s:%s>' % (self.__class__.__name__, self.name)
 
