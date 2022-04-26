@@ -15,7 +15,7 @@ async def create_pool(loop, **kw):
     global __pool
     __pool = await aiomysql.create_pool(
         host=kw.get('host', 'localhost'),
-        port=kw.get('port', 7777),
+        port=kw.get('port', 3306),
         user=kw['user'],
         password=kw['password'],
         db=kw['db'],
