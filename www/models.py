@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+__author__ = 'YoungerKayn'
 # 创建用户、文章、评论对应的Models
 
 import time, uuid

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+__author__ = 'YoungerKayn'
 # 编写ORM
 
 import aiomysql,asyncio,logging
