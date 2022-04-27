@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 __author__ = 'YoungerKayn'
-# MVC
+# MVC，或url处理模块
 
 from models import User
 from coroweb import get
