@@ -134,11 +134,7 @@ async def init(loop):
     # 建立数据库连接池
     await orm.create_pool(loop=loop, **configs.db)
     app = web.Application(middlewares=[
-<<<<<<< .merge_file_a09028
-        logger_factory, response_factory, auth_factory
-=======
         logger_factory, auth_factory, data_factory, response_factory,
->>>>>>> .merge_file_a18220
     ])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
     add_routes(app, 'handlers')
