@@ -13,7 +13,7 @@ from jinja2 import Environment, FileSystemLoader
 from config import configs # 修改配置文件路径
 import orm
 from coroweb import add_routes, add_static
-# from handlers import cookie2user, COOKIE_NAME
+from handlers import cookie2user, COOKIE_NAME
 
 # 初始化jinja2的函数
 def init_jinja2(app, **kw):
@@ -46,7 +46,7 @@ async def logger_factory(app, handler):
         logging.info('Request: %s %s' % (request.method, request.path))
         return (await handler(request))
     return logger
-'''
+
 # 认证处理工厂：把当前用户绑定到request上，并对URL/manage/进行拦截，检查当前用户是否是管理员身份
 async def auth_factory(app, handler):
     async def auth(request):
@@ -62,7 +62,7 @@ async def auth_factory(app, handler):
             return web.HTTPFound('/signin')
         return (await handler(request))
     return auth
-'''
+
 # 数据处理工厂
 async def data_factory(app, handler):
     async def parse_data(request):
@@ -100,7 +100,7 @@ async def response_factory(app, handler):
                 resp.content_type = 'application/json;charset=utf-8'
                 return resp
             else:
-                #r['__user__'] = request.__user__
+                r['__user__'] = request.__user__
                 resp = web.Response(body=app['__templating__'].get_template(template).render(**r).encode('utf-8'))
                 resp.content_type = 'text/html;charset=utf-8'
                 return resp
@@ -134,7 +134,7 @@ async def init(loop):
     # 建立数据库连接池
     await orm.create_pool(loop=loop, **configs.db)
     app = web.Application(middlewares=[
-        logger_factory, response_factory#,auth_factory
+        logger_factory, response_factory, auth_factory
     ])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
     add_routes(app, 'handlers')
