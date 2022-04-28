@@ -9,7 +9,6 @@ from urllib import parse
 
 from aiohttp import web
 
-# apis是处理分页的模块，将apis.py放在www下以防报错
 # APIError 是指API调用时发生逻辑错误
 from apis import APIError
 

@@ -132,7 +132,7 @@ async def init(loop):
     # 建立数据库连接池
     await orm.create_pool(loop=loop, **configs.db)
     app = web.Application(middlewares=[
-        logger_factory, response_factory,auth_factory
+        logger_factory, auth_factory, data_factory, response_factory,
     ])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
     add_routes(app, 'handlers')
@@ -144,6 +144,7 @@ async def init(loop):
     await srv.start()
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
+    loop =  asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     loop.run_until_complete(init(loop))
     loop.run_forever()
