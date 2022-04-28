@@ -28,15 +28,17 @@
     <!--jinja2 meta块-->
     {% block meta %}<!-- block meta  -->{% endblock %}
     <!--jinja2 title块-->
-    <title>{% block title %} ? {% endblock %}| AwesomeDavidBlog</title>
+    <title>{% block title %} ? {% endblock %}| Younger's Blog</title>
     <link rel="stylesheet" href="/static/css/uikit.min.css">
     <link rel="stylesheet" href="/static/css/awesome.css" />
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/sha1.min.js"></script>
     <script src="/static/js/uikit.min.js"></script>
-    <script src="/static/js/icons.min.js"></script>
+    <script src="/static/js/uikit-icons.js"></script>
+    <script src="/static/js/uikit-icons.min.js"></script>
     <script src="/static/js/sticky.min.js"></script>
     <script src="/static/js/vue.min.js"></script>
+    <script src="/static/js/vue.js"></script>
     <script src="/static/js/awesome.js"></script>
     <!--jinja2 beforehead块-->
     {% block beforehead %}<!-- before head  -->{% endblock %}
@@ -54,13 +56,13 @@
             <a class="uk-navbar-item uk-logo uk-margin-left" href="/">
                 <!--此处uk-icon为图标,读者可以选UIkit自带icon,也可以添加自定义icon重新打包uk-icon.js,详见官网Documentation-->
                 <span class="uk-icon uk-margin-small-right" uk-icon="pagekit" ratio="2"></span>
-                 凹大卜  
+                 Younger' Blog  
             </a>
             <ul class="uk-navbar-nav">
                 <li><a href="/"> Article | 日志</a></li>
-                <li><a href="https://aodabo.tech/tags/tutorial"> Tutorial | 教程</a></li>
-                <li><a href="https://aodabo.tech/tags/landscape"> Landscape | 景观</a></li>
-                <li><a href="https://aodabo.tech/tags/coding"> Coding | 编程</a></li>
+                <li><a href="https://www.liaoxuefeng.com"> Tutorial | 教程</a></li>
+                <li><a href="https://www.airpano.com/"> Landscape | 景观</a></li>
+                <li><a href="http://1.12.232.110:365"> Coding | 编程</a></li>
             </ul>
         </div>
         <div class="uk-navbar-right uk-margin-medium-top uk-margin-medium-bottom">
@@ -90,7 +92,7 @@
         <div class="uk-navbar-left">
             <a class="uk-navbar-item uk-logo" href="/">
                 <span class="uk-icon uk-margin-small-right" uk-icon="pagekit" ratio="2"></span>
-                 凹大卜  
+                 Younger's Blog  
             </a>
         </div>
         <div class="uk-navbar-right">
@@ -102,9 +104,9 @@
             <div class="uk-offcanvas-bar uk-flex uk-flex-column">
             <ul class="uk-nav uk-nav-default uk-margin-auto-vertical">
                 <li><a href="/"> Article | 日志</a></li>
-                <li><a href="https://aodabo.tech/tags/tutorial"> Tutorial | 教程</a></li>
-                <li><a href="https://aodabo.tech/tags/landscape"> Landscape | 景观</a></li>
-                <li><a href="https://aodabo.tech/tags/coding"> Coding | 编程</a></li>
+                <li><a href="https://www.liaoxuefeng.com"> Tutorial | 教程</a></li>
+                <li><a href="https://www.airpano.com/"> Landscape | 景观</a></li>
+                <li><a href="http://1.12.232.110:365"> Coding | 编程</a></li>
                 {% if __user__ %}
                 <li><a href="/manage/">Manage | 管理</a></li>
                 <li><a href="/signout"> Logout | 注销</a></li>
@@ -137,8 +139,8 @@
             <a target="_blank" href="#" class="uk-icon-button uk-margin-small-right" ratio="1.2" uk-icon="google-plus"></a>
             <a target="_blank" href="#" class="uk-icon-button uk-margin-small-right" ratio="1.1" uk-icon="linkedin"></a>
         </p>
-        <p class="uk-text-meta" style="line-height: 10px; padding: 10px 0; margin: 8px 0;">Powered by <a href="https://aodabo.tech">AwesomeDavidBlog!</a> Copyright &copy; 2018.</p>
-        <p class="uk-text-meta" style="line-height: 0px; padding: 0px 0; margin: 0px 0;"><a href="https://aodabo.tech/" target="_blank">Zhiyuan Yang</a>. All rights reserved.</p>
+        <p class="uk-text-meta" style="line-height: 10px; padding: 10px 0; margin: 8px 0;">Powered by <a href="http://younger.ink">Younger'Blog.</a> Copyright &copy; 2022.</p>
+        <p class="uk-text-meta" style="line-height: 0px; padding: 0px 0; margin: 0px 0;"><a href="http://younger.ink/" target="_blank">Younger Lin</a>. All rights reserved.</p>
     </div>
     </div>
 
