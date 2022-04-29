@@ -3,7 +3,7 @@ import markdown
 from aiohttp import web
 from coroweb import get, post
 
-## 分页管理以及调取API时的错误信息
+# 分页管理以及调取API时的错误信息
 from apis import Page, APIValueError, APIResourceNotFoundError, APIPermissionError, APIError
 from models import User, Comment, Blog, next_id
 from config import configs
@@ -11,12 +11,12 @@ from config import configs
 COOKIE_NAME = 'awesession'
 _COOKIE_KEY = configs.session.secret
 
-## 查看是否是管理员用户
+# 查看是否是管理员用户
 def check_admin(request):
     if request.__user__ is None or not request.__user__.admin:
         raise APIPermissionError()
 
-## 获取页码信息
+# 获取页码信息
 def get_page_index(page_str):
     p = 1
     try:
@@ -27,7 +27,7 @@ def get_page_index(page_str):
         p = 1
     return p
 
-## 计算加密cookie
+# 计算加密cookie
 def user2cookie(user, max_age):
     # build cookie string by: id-expires-sha1
     expires = str(int(time.time() + max_age))
@@ -35,12 +35,12 @@ def user2cookie(user, max_age):
     L = [user.id, expires, hashlib.sha1(s.encode('utf-8')).hexdigest()]
     return '-'.join(L)
 
-## 文本转HTML
+# 文本转HTML
 def text2html(text):
     lines = map(lambda s: '<p>%s</p>' % s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'), filter(lambda s: s.strip() != '', text.split('\n')))
     return ''.join(lines)
 
-## 解密cookie
+# 解密cookie
 async def cookie2user(cookie_str):
     if not cookie_str:
         return None
@@ -64,7 +64,14 @@ async def cookie2user(cookie_str):
         logging.exception(e)
         return None
 
-## 处理首页URL
+# 测试页面
+@get('/test')
+def test_page():
+    return {
+       '__template__': 'tomato.html'
+    }
+
+# 处理首页URL
 @get('/')
 async def index(*, page='1'):
     page_index = get_page_index(page)
@@ -80,7 +87,7 @@ async def index(*, page='1'):
         'blogs': blogs
     }
 
-## 处理日志详情页面URL
+# 处理日志详情页面URL
 @get('/blog/{id}')
 async def get_blog(id):
     blog = await Blog.find(id)
@@ -94,21 +101,21 @@ async def get_blog(id):
         'comments': comments
     }
 
-## 处理注册页面URL
+# 处理注册页面URL
 @get('/register')
 def register():
     return {
        '__template__': 'register.html'
     }
 
-## 处理登录页面URL
+# 处理登录页面URL
 @get('/signin')
 def signin():
     return {
         '__template__': 'signin.html'
     }
 
-## 用户登录验证API
+# 用户登录验证API
 @post('/api/authenticate')
 async def authenticate(*, email, passwd):
     if not email:
@@ -134,7 +141,7 @@ async def authenticate(*, email, passwd):
     r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')
     return r
 
-## 用户注销
+# 用户注销
 @get('/signout')
 def signout(request):
     referer = request.headers.get('Referer')
@@ -143,12 +150,12 @@ def signout(request):
     logging.info('user signed out.')
     return r
 
-## 获取管理页面
+# 获取管理页面
 @get('/manage/')
 def manage():
     return 'redirect:/manage/comments'
 
-## 评论管理页面
+# 评论管理页面
 @get('/manage/comments')
 def manage_comments(*, page='1'):
     return {
@@ -156,7 +163,7 @@ def manage_comments(*, page='1'):
         'page_index': get_page_index(page)
     }
 
-## 日志管理页面
+# 日志管理页面
 @get('/manage/blogs')
 def manage_blogs(*, page='1'):
     return {
@@ -164,7 +171,7 @@ def manage_blogs(*, page='1'):
         'page_index': get_page_index(page)
     }
 
-## 创建日志页面
+# 创建日志页面
 @get('/manage/blogs/create')
 def manage_create_blog():
     return {
@@ -173,7 +180,7 @@ def manage_create_blog():
         'action': '/api/blogs'
     }
 
-## 编辑日志页面
+# 编辑日志页面
 @get('/manage/blogs/edit')
 def manage_edit_blog(*, id):
     return {
@@ -182,7 +189,7 @@ def manage_edit_blog(*, id):
         'action': '/api/blogs/%s' % id
     }
 
-## 用户管理页面
+# 用户管理页面
 @get('/manage/users')
 def manage_users(*, page='1'):
     return {
@@ -190,7 +197,7 @@ def manage_users(*, page='1'):
         'page_index': get_page_index(page)
     }
 
-## 获取评论信息API
+# 获取评论信息API
 @get('/api/comments')
 async def api_comments(*, page='1'):
     page_index = get_page_index(page)
@@ -201,7 +208,7 @@ async def api_comments(*, page='1'):
     comments = await Comment.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
     return dict(page=p, comments=comments)
 
-## 用户发表评论API
+# 用户发表评论API
 @post('/api/blogs/{id}/comments')
 async def api_create_comment(id, request, *, content):
     user = request.__user__
@@ -216,7 +223,7 @@ async def api_create_comment(id, request, *, content):
     await comment.save()
     return comment
 
-## 管理员删除评论API
+# 管理员删除评论API
 @post('/api/comments/{id}/delete')
 async def api_delete_comments(id, request):
     check_admin(request)
@@ -226,7 +233,7 @@ async def api_delete_comments(id, request):
     await c.remove()
     return dict(id=id)
 
-## 获取用户信息API
+# 获取用户信息API
 @get('/api/users')
 async def api_get_users(*, page='1'):
     page_index = get_page_index(page)
@@ -239,11 +246,11 @@ async def api_get_users(*, page='1'):
         u.passwd = '******'
     return dict(page=p, users=users)
 
-## 定义EMAIL和HASH的格式规范
+# 定义EMAIL和HASH的格式规范
 _RE_EMAIL = re.compile(r'^[a-z0-9\.\-\_]+\@[a-z0-9\-\_]+(\.[a-z0-9\-\_]+){1,4}$')
 _RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
 
-## 用户注册API
+# 用户注册API
 @post('/api/users')
 async def api_register_user(*, email, name, passwd):
     if not name or not name.strip():
@@ -267,7 +274,7 @@ async def api_register_user(*, email, name, passwd):
     r.body = json.dumps(user, ensure_ascii=False).encode('utf-8')
     return r
 
-## 获取日志列表API
+# 获取日志列表API
 @get('/api/blogs')
 async def api_blogs(*, page='1'):
     page_index = get_page_index(page)
@@ -278,13 +285,13 @@ async def api_blogs(*, page='1'):
     blogs = await Blog.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
     return dict(page=p, blogs=blogs)
 
-## 获取日志详情API
+# 获取日志详情API
 @get('/api/blogs/{id}')
 async def api_get_blog(*, id):
     blog = await Blog.find(id)
     return blog
 
-## 发表日志API
+# 发表日志API
 @post('/api/blogs')
 async def api_create_blog(request, *, name, summary, content):
     check_admin(request)
@@ -298,7 +305,7 @@ async def api_create_blog(request, *, name, summary, content):
     await blog.save()
     return blog
 
-## 编辑日志API
+# 编辑日志API
 @post('/api/blogs/{id}')
 async def api_update_blog(id, request, *, name, summary, content):
     check_admin(request)
@@ -315,7 +322,7 @@ async def api_update_blog(id, request, *, name, summary, content):
     await blog.update()
     return blog
 
-## 删除日志API
+# 删除日志API
 @post('/api/blogs/{id}/delete')
 async def api_delete_blog(request, *, id):
     check_admin(request)
@@ -323,7 +330,7 @@ async def api_delete_blog(request, *, id):
     await blog.remove()
     return dict(id=id)
 
-## 删除用户API
+# 删除用户API
 @post('/api/users/{id}/delete')
 async def api_delete_users(id, request):
     check_admin(request)

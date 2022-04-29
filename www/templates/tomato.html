@@ -1,0 +1,251 @@
+<!doctype html>
+<html>
+<head>
+<link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+<meta charset="utf-8">
+<title>TomatoClock</title>
+<script src="/static/js/tomato.js"></script>
+<style>
+body,p {
+	margin:0;
+}
+body {
+	position:absolute;
+	top:0;
+	left:0;
+	bottom:0;
+	right:0;
+	background:rgba(0,0,0,0.8);
+	color:#fff;
+	user-select:none;
+}
+.clear:after {
+	content:'';
+	display:block;
+	clear:both;
+}
+.wrapper {
+	width:600px;
+	margin:0 auto;
+}
+h1 {
+	text-align:center;
+	font-size:60px;
+}
+.break,.session {
+	width:200px;
+	text-align:center;
+	font-size:26px;
+	font-weight:200;
+}
+.break {
+	float:left;
+}
+.session {
+	float:right;
+}
+.break span,.session span {
+	padding:0 10px;
+}
+.break-minus,.break-add,.session-minus,.session-add {
+	cursor:pointer;
+}
+.circle {
+	position:relative;
+	width:300px;
+	height:300px;
+	border-radius:50%;
+	border:3px solid rgb(240, 68, 0);
+	margin:100px auto;
+	text-align:center;
+}
+.name,.time {
+	position:relative;
+	font-size:34px;
+	margin:65px 0;
+	z-index:100;
+}
+.bg {
+	position:absolute;
+	top:10px;
+	left:10px;
+	width:280px;
+	height:280px;
+	border-radius:50%;
+	overflow:hidden;
+}
+.bg-inner {
+	position:absolute;
+	bottom:0;
+	width:100%;
+	height:0;
+	background:orange;
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>Tomato Clock</h1>
+    <p class="time-name clear">
+        <span class="break">Break Length</span>
+        <span class="session">Session Length</span>
+    </p>
+    <p class="plan-time clear">
+        <span class="break">
+                <span class="break-minus">-</span>
+        <span class="break-num"></span>
+        <span class="break-add">+</span>
+        </span>
+        <span class="session">
+                <span class="session-minus">-</span>
+        <span class="session-num"></span>
+        <span class="session-add">+</span>
+        </span>
+    </p>
+    <div class="circle">
+        <p class="name"></p>
+        <p class="time"></p>
+        <div class="bg">
+            <p class="bg-inner"></p>
+        </div>
+
+    </div>
+</div>
+
+<script>
+var breakTime = 15, //休息时长(单位分)
+    sessionTime = 45, //工作时长(单位分)
+    current = sessionTime * 60, //当前计时器的倒计时时间(单位秒)
+    showTime = sessionTime; //圈内显示的时间
+var state = false, //计时器当前是否处于计时中（ true：计时中；false: 未计时）
+    model = 'Session', //计时器当前模式 （Session：工作模式; Break：休息模式）
+    timer; //计时器
+//使显示时、分、秒均以两位数的形式呈现 （如：2秒 -> 02）
+function toDou(num) {
+    return num < 10 ? "0" + num : "" + num;
+}
+//将秒数转换成时:分:秒的形式 （如 00:12:05）
+function conversion(time) {
+    current = parseInt(time);
+    var h = parseInt(current / 3600),
+        m = parseInt(current % 3600 / 60);
+    s = parseInt(current % 3600 % 60);
+    return toDou(h) + ":" + toDou(m) + ":" + toDou(s);
+}
+//点击- +时执行的函数
+//传入两个参数：
+//  str: 修改工作时长时传入字符串session，
+//       修改休息时长时传入字符串break
+//  num: 点击 - 传入-1
+//       点击 + 传入1
+function eventFun(str, num) {
+    //计时器停止时可修改时长
+    if (!state) {
+        //根据用户操作 修改时长
+        if (str == 'break') { //修改的是break时长
+            breakTime += num;
+            //break时长小于1时另其等于1
+            if (breakTime < 1) {
+                breakTime = 1;
+            }
+        } else if (str == 'session') { //修改的是session时长
+            sessionTime += num;
+            //session时长小于1时另其等于1
+            if (sessionTime < 1) {
+                sessionTime = 1;
+            }
+        }
+        //更新showTime current  用于页面渲染显示
+        if (model == 'Break') {
+            showTime = breakTime;
+            current = breakTime * 60;
+        } else if (model == 'Session') {
+            showTime = sessionTime;
+            current = sessionTime * 60;
+        }
+        //渲染数据
+        $('.break-num').text(breakTime);
+        $(".session-num").text(sessionTime);
+        $('.time').text(showTime);
+    }
+}
+//绑定事件
+function bindEvent() {
+    //点击break 减
+    $('.break-minus').click(function() {
+        eventFun('break', -1);
+    });
+    //点击break 加
+    $('.break-add').click(function() {
+        eventFun('break', 1);
+    });
+    //点击session 减
+    $('.session-minus').click(function() {
+        eventFun('session', -1);
+    });
+    //点击session 加
+    $('.session-add').click(function() {
+        eventFun('session', 1);
+    });
+    //点击圆圈
+    //state为false时表示当前计时器停止中，设置计时器；
+    //state为true时表示当前计时器在计时中，清空计时器
+    $('.circle').click(function() {
+        if (!state) {
+            timer = setInterval(function() {
+                myTimer();
+            }, 1000);
+        } else {
+            clearInterval(timer);
+        }
+        state = !state;
+    });
+}
+
+
+//计时器每个1s执行的函数
+// 1、更新显示时间（showTime)，改变current当前时长（单位s)，并通过conversion函数转成时分秒样式，赋值给showTime用于页面渲染数据
+// 2、break和session计时的切换
+// 3、背景高度的变化
+function myTimer() {
+    //当前时间-1
+    current--;
+    if (current <= 0) {
+        if (model == 'Session') {
+            model = 'Break';
+            current = breakTime * 60;
+            $('.bg-inner').css('background', 'green');
+        } else {
+            model = 'Session';
+            current = sessionTime * 60;
+            $('.bg-inner').css('background', 'orange');
+        }
+        $('.name').text(model);
+    }
+    //转换时长为时分秒格式
+    showTime = conversion(current);
+    //渲染圆圈内的时间
+    $('.time').text(showTime);
+
+    //改变背景高度
+    // current/(60*session) 剩余时长占总时长的占比
+    // 1 - current/(60*session)  已经走过的时长占比
+    if (model == 'Session') {
+        $('.bg-inner').height((1 - current / (60 * sessionTime)) * 100 + '%');
+    } else {
+        $('.bg-inner').height((1 - current / (60 * breakTime)) * 100 + '%');
+    }
+}
+// 初始化页面，渲染默认break session时长，以及圆圈内时长和模型
+function init() {
+    $('.break-num').text(breakTime);
+    $(".session-num").text(sessionTime);
+    $('.name').text(model);
+    $('.time').text(showTime);
+    bindEvent();
+}
+init();
+</script>
+
+</body>
+</html>

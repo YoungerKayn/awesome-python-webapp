@@ -46,7 +46,6 @@ $(function () {
     <!--日志评论区-->
     {% if __user__ %}
         <h3>发表评论</h3>
-
         <article class="uk-comment">
             <header class="uk-comment-header">
                 <img class="uk-comment-avatar uk-border-circle" width="50" height="50" src="{{ __user__.image }}">
@@ -57,7 +56,7 @@ $(function () {
                     <fieldset class="uk-fieldset">
                         <div class="uk-alert uk-alert-danger uk-hidden"></div>
                         <div class="uk-margin">
-                            <textarea class="uk-textarea" rows="6" placeholder="说点什么吧"></textarea>
+                            <textarea class="uk-textarea" rows="6" placeholder="Tell your ideas. Markdown supported"></textarea>
                         </div>
                         <div class="uk-margin">
                             <button type="submit" class="uk-button uk-button-primary"> 发表评论</button>

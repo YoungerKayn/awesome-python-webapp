@@ -3,7 +3,6 @@
 __author__ = 'YoungerKayn'
 # Web APP骨架
 
-# 在handlers完成后，将import处、auth_factory、103行、137行的注释删去
 
 import logging; logging.basicConfig(level=logging.INFO)
 import asyncio, os, json, time
