@@ -140,7 +140,7 @@ async def init(loop):
     add_static(app)
     runner = web.AppRunner(app)
     await runner.setup()
-    srv = web.TCPSite(runner, 'localhost', 7777)
+    srv = web.TCPSite(runner, '127.0.0.1', 7777)
     logging.info('server started at http://127.0.0.1:7777...')
     await srv.start()
 
