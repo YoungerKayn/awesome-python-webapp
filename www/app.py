@@ -3,6 +3,8 @@
 __author__ = 'YoungerKayn'
 # Web APP骨架
 
+server_ip = '192.168.1.223'
+server_port = 7777
 
 import logging; logging.basicConfig(level=logging.INFO)
 import asyncio, os, json, time
@@ -140,8 +142,8 @@ async def init(loop):
     add_static(app)
     runner = web.AppRunner(app)
     await runner.setup()
-    srv = web.TCPSite(runner, '127.0.0.1', 7777)
-    logging.info('server started at http://127.0.0.1:7777...')
+    srv = web.TCPSite(runner, server_ip, server_port)
+    logging.info(f'server started at http://{server_ip}:{server_port}...')
     await srv.start()
 
 if __name__ == '__main__':
